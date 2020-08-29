@@ -39,7 +39,10 @@ function normalizeState(
     return nextState;
   }
   nextState.dateList = Object.keys(schedule).sort();
-  if (nextState.currentDate === undefined) {
+  if (
+    nextState.currentDate === undefined ||
+    !nextState.dateList.includes(nextState.currentDate)
+  ) {
     nextState.currentDate = getCurrentDateIndex(nextState.dateList);
   }
   schedule = schedule?.[nextState.currentDate]?.schedule;
