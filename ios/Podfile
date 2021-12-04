@@ -85,6 +85,12 @@ target 'phys_math_brsu_schedule' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'toolbar-android', :path => '../node_modules/@react-native-community/toolbar-android'
+
   target 'phys_math_brsu_scheduleTests' do
     inherit! :complete
     # Pods for testing
