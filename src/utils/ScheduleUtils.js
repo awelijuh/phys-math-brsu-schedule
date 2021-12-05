@@ -26,9 +26,10 @@ export function getDayText(dateStr) {
     if (date.add(1, "day").diff(todayDate) === 0) {
         return 'Вчера'
     }
-    if (todayDate.add(1, 'day').diff(date) === 0) {
+    if (date.subtract(2, 'day').diff(todayDate) === 0) {
         return 'Завтра'
     }
+    date.add(1, 'day')
     if (date.week() === todayDate.week() && date.year() === todayDate.year()) {
         return 'Текущая неделя'
     }
@@ -206,4 +207,22 @@ export function search(searchSchedule, text) {
         }
     }
     return schedule
+}
+
+export function searchInDay(searchSchedule, text, day) {
+    if (text == null || text === '' || searchSchedule == null || day == null) {
+        return searchSchedule?.[day];
+    }
+    text = replaceAll(text, ' ', '').toLowerCase()
+
+    let daySchedule = []
+    let s = searchSchedule[day]
+    for (let i in s) {
+        let item = s[i]
+        if (item.fullSearchText.includes(text)) {
+            daySchedule.push(item)
+        }
+    }
+
+    return daySchedule
 }

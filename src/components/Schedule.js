@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View} from "react-native";
+import {Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View} from "react-native";
 import {Picker} from "@react-native-community/picker";
 import searchIcon from "../res/baseline_search_black_24dp.png"
 import backIcon from "../res/baseline_arrow_back_black_24dp.png"
@@ -19,7 +19,6 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import {WeekSchedule} from "./WeekSchedule";
 import ActionBar from "react-native-action-bar";
-import {SearchBar} from "react-native-elements";
 import {readSchedule, writeSchedule} from "../parsers/StorageManager";
 import firestore from "@react-native-firebase/firestore";
 
@@ -46,13 +45,16 @@ function ActionSearchBar({isSearch = false, onChangeSearch, onChangeText, text, 
                             source={backIcon}/>
                     </TouchableOpacity>
                 </View>
-                <SearchBar platform="ios"
-                           value={text}
-                           onChangeText={t => onChangeText?.(t)}
-                           containerStyle={styles.searchbar}
-                           onCancel={() => onChangeSearch?.(false)}
-                           cancelButtonTitle={''}
-                />
+                <View style={styles.searchView}>
+                    <TextInput value={text}
+                               onChangeText={t => onChangeText?.(t)}
+                               containerStyle={styles.searchbar}
+                               style={styles.searchInput}
+                        // onCancel={() => onChangeSearch?.(false)}
+                               cancelButtonTitle={''}
+                               placeholder={"Найти"}
+                    />
+                </View>
             </View>
         )
     }
@@ -233,8 +235,9 @@ function ScheduleComponent(props) {
 
                 )
             }
-            <WeekSchedule onChangeDay={setDay} isSearch={isSearch}
-                          weekSchedule={isSearch ? search(searchSchedule, searchText) : groupSchedule}/>
+            <WeekSchedule onChangeDay={setDay} searchText={searchText} isSearch={isSearch}
+                          searchSchedule={searchSchedule}
+                          weekSchedule={groupSchedule}/>
         </View>
 
     )
@@ -317,7 +320,20 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 0,
         backgroundColor: '#607d8b',
+    },
+    searchInput: {
+        backgroundColor: 'white',
+        width: '100%',
+        // margin: 8
+    },
+    searchView: {
+        flex: 1,
+        backgroundColor: '#607d8b',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 8,
     }
+
 });
 
 

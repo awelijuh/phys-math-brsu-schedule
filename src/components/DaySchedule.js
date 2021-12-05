@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, View} from "react-native";
+import {FlatList, StyleSheet, View} from "react-native";
 import React from "react";
 import {SubjectSchedule} from "./SubjectSchedule";
 
@@ -16,16 +16,23 @@ function DaySchedule({daySchedule}) {
 
     return (
         <View style={styles.scene}>
-            <ScrollView contentContainerStyle={{paddingBottom: 150}}>
-                {daySchedule?.map?.((value, index) => (
-                    <SubjectSchedule
-                        key={index}
-                        time={value?.time}
-                        subject={value?.subject}
-                        group={value?.group}
-                    />
-                ))}
-            </ScrollView>
+            <FlatList data={daySchedule} renderItem={({item}) => (
+                <SubjectSchedule
+                    time={item?.time}
+                    subject={item?.subject}
+                    group={item?.group}
+                />
+            )}/>
+            {/*<ScrollView contentContainerStyle={{paddingBottom: 150}}>*/}
+            {/*    {daySchedule?.map?.((value, index) => (*/}
+            {/*        <SubjectSchedule*/}
+            {/*            key={index}*/}
+            {/*            time={value?.time}*/}
+            {/*            subject={value?.subject}*/}
+            {/*            group={value?.group}*/}
+            {/*        />*/}
+            {/*    ))}*/}
+            {/*</ScrollView>*/}
         </View>
 
     )

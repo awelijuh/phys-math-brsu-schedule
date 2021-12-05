@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getDaySchedule, getWeekDay} from "../utils/ScheduleUtils";
+import {getDaySchedule, getWeekDay, searchInDay} from "../utils/ScheduleUtils";
 import {StyleSheet, Text, View} from "react-native";
 import {TabBar, TabView} from "react-native-tab-view";
 import {DaySchedule} from "./DaySchedule";
@@ -29,16 +29,30 @@ function MTabBar(props) {
     );
 }
 
-function Scene({scene, weekSchedule}) {
+function Scene({day, weekSchedule, searchSchedule, isSearch, searchText}) {
+    const [daySchedule, setDaySchedule] = useState({daySchedule: null,})
+    useEffect(() => {
+        let ds
+        if (!isSearch) {
+            ds = getDaySchedule(weekSchedule, day)
+        } else {
+            ds = searchInDay(searchSchedule, searchText, day)
+        }
+        setDaySchedule({daySchedule: ds, day: day, isSearch: isSearch, searchText: searchText})
+    }, [day, weekSchedule, searchSchedule, isSearch, searchText])
+
+    if (day !== daySchedule.day || isSearch !== daySchedule?.isSearch || searchText !== daySchedule?.searchText) {
+        return <Text style={{width: '100%', textAlign: 'center'}}>Загрузка...</Text>
+    }
+
     return (
         <DaySchedule
-            key={scene?.route?.index}
-            daySchedule={getDaySchedule(weekSchedule, scene?.route?.index)}
+            daySchedule={daySchedule?.daySchedule}
         />
     );
 }
 
-function WeekSchedule({weekSchedule, onChangeDay}) {
+function WeekSchedule({weekSchedule, onChangeDay, isSearch, searchSchedule, searchText}) {
     const [index, setIndex] = useState(getDayIndex())
 
     const routes = Object.keys(weekSchedule)
@@ -56,11 +70,15 @@ function WeekSchedule({weekSchedule, onChangeDay}) {
     return (
         <View style={styles.view}>
             <TabView
+                lazy
                 renderTabBar={props => <MTabBar {...props}/>}
-                renderScene={(scene) => <Scene scene={scene} weekSchedule={weekSchedule}/>}
+                renderScene={(scene) => <Scene day={scene?.route?.index} weekSchedule={weekSchedule}
+                                               isSearch={isSearch}
+                                               searchSchedule={searchSchedule} searchText={searchText}/>}
                 onIndexChange={index => setIndex(index)}
                 navigationState={{index: index, routes: routes}}
                 initialLayout={styles.view}
+                renderLazyPlaceholder={() => <Text style={{width: '100%', textAlign: 'center'}}>Загрузка...</Text>}
             />
         </View>
 
